@@ -107,8 +107,7 @@ function app() {
                     renderUserRepos);
     }
 
-    function executeSearch(login) {
-        hideSearchResult();        
+    function executeSearch(login) {     
         hideError();
         retrieveUserInfo(login);
     }

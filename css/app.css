@@ -1,0 +1,157 @@
+body {
+    font-family: sans-serif;
+    font-size: 12pt;
+    background: #F0F0F0;
+}
+
+p, div, li, ul, span {
+    margin: 0; 
+    padding: 0;
+}
+
+#main-container {    
+    width: 24.5em;
+    max-height: 25em;
+    margin: auto;
+    /*  It's not clear from screenshots if vertical position must be also in the
+        middle. So implemented a reasonable margin from the top instead. */
+    margin-top: 4em;
+    box-shadow: 10px 10px 27px rgba(0, 0, 0, .5);
+    border-radius: 4%;
+    padding: 1.5em 1.5em 0em 1.5em;
+    background: white;
+    overflow: hidden;
+    /* transparent border: a trick to stop overflow from going onto 
+       the padding */
+    border-bottom: 1.5em solid rgba(0, 0, 0, 0);  
+}
+
+#main-container .error {
+    color: #980F06;
+    border: 1px solid #CFB2B2;
+    background: #F9DEDE;
+    padding: 1em;
+    margin-top: 1em;
+    margin-bottom: 0;
+    border-radius: .2em;
+    display: none;
+}
+
+#main-container form {
+    display:flex;
+    flex-direction:row;
+    margin: 0; padding: 0;
+}
+
+#main-container form input {
+    border: 1px solid #CCCCCC;    
+    border-radius: .3em;
+    padding: 0.6em;
+    font-size: 10pt;
+}
+
+#main-container form .input-text {
+    flex: 1;
+    color: #AAAAAA;
+    font-weight: bold;
+}
+
+/* 
+    This did not work perfectly -- the default text changed color and 
+    normal/bold on focus. So implemented in Javascript instead see 
+    function addSearchFormUsernameListeners().
+*/
+/*
+#main-container form .input-text:focus {
+    color: black;
+    font-weight: normal;    
+}
+*/
+
+#main-container form .input-button {
+    margin-left: .7em;
+    font-weight: bold;
+    padding-left: 1em;
+    padding-right: 1em;
+    background: linear-gradient(#FBFBFB, #EFEFEF);
+}
+
+#main-container #search-result {       
+    height: auto;
+    margin-top: .8em;
+    display: none;
+}
+
+#main-container #search-result #avatar {
+    width: 4.5em;
+    height: 4.5em;
+    float: left; 
+    margin-right: 1em;
+    border-radius: 4%;        
+}
+
+#main-container #search-result .user-info {
+    padding: 0; 
+    color: #333333;
+    margin: .15em 0 0 0;
+    min-height: 1em;
+}
+
+#main-container #search-result #username {
+    font-size: 10pt;
+    font-style: italic;
+}
+
+#main-container #search-result #full-name {
+    font-size: 22pt;
+    font-weight: bold;
+}
+
+#main-container #search-result #bio {
+    font-size: 10pt;    
+}
+
+#main-container #search-result #repositories #repositories-title {
+    font-size: 13pt;
+    font-weight: bold;
+    color: #333333;
+    margin-top: 1.2em;
+}
+
+#main-container #search-result ul {
+    margin-top: .5em;
+    border-top: 2px solid #777777;
+    list-style-type: none;
+}
+
+#main-container #search-result ul li {
+    border-bottom: 1px solid #CCCCCC;
+    padding: .9em;
+    color: #222222;
+}
+
+#main-container #search-result ul li .repo-name {
+    font-size: 13pt;
+    font-weight: bold;      
+}
+
+
+#main-container #search-result ul li .repo-stars {
+    font-size: 10pt;
+    padding-left: 1.2em;
+    padding-top: .1em;
+    background-image: url("../images/star.svg");
+    background-repeat: no-repeat;
+    float: right;
+}
+
+#main-container #search-result ul li .repo-forks {
+    font-size: 10pt;
+    padding-left: .9em;
+    padding-top: .1em; 
+    margin-left: .3em;   
+    background-image: url("../images/repo-forked.svg");
+    background-repeat: no-repeat;
+    float: right;
+}
+

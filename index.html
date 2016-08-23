@@ -1,11 +1,60 @@
 <!DOCTYPE html>
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Hello!</title>
-</head>
-<body>
-
-<h1>Hello!</h1>
-</body>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>Github user's information and repos list</title>
+        <link rel="stylesheet" type="text/css" href="css/app.css">
+        <script type="text/javascript" src="js/app.js"></script>
+    </head>
+    <body>
+        <div id="main-container">
+            <form id="search-form">
+                <input type="text" id="search-username" class="input-text" placeholder="Search username...">          
+                <input type="submit" id="search-button" value="Search" class="input-button">
+            </form>
+            <div class="error"></div>
+            <div id="search-result">
+                <!-- fake values left intentionally to make adjusting CSS easier -->
+                <img alt="avatar" id="avatar" src="https://avatars1.githubusercontent.com/u/1024025?v=3&s=460">
+                <p id=username class="user-info">@username</p>
+                <p id="full-name" class="user-info">Full Name</p>
+                <p id="bio" class="user-info">this is the bio...</p>
+                <div id="repositories">
+                    <p id=repositories-title>Repositories<p>                   
+                    <ul>
+                        <li>
+                            <span class="repo-name">Repo 1</span>
+                            <span class="repo-forks">10</span>                        
+                            <span class="repo-stars">50</span>                        
+                        </li>
+                        <li>
+                            <span class="repo-name">Repo 2</span>
+                            <span class="repo-forks">1</span>                        
+                            <span class="repo-stars">25</span>                        
+                        </li>
+                        <li>
+                            <span class="repo-name">Repo 3</span>
+                            <span class="repo-forks">101</span>                        
+                            <span class="repo-stars">5</span>                        
+                        </li>
+                        <li>
+                            <span class="repo-name">Repo 4</span>
+                            <span class="repo-forks">3510</span>                        
+                            <span class="repo-stars">50</span>                        
+                        </li>
+                        <li>
+                            <span class="repo-name">Repo 5</span>
+                            <span class="repo-forks">1</span>                        
+                            <span class="repo-stars">25</span>                        
+                        </li>
+                        <li>
+                            <span class="repo-name">Repo 6</span>
+                            <span class="repo-forks">101</span>                        
+                            <span class="repo-stars">5</span>                        
+                        </li>                        
+                    </ul>
+                </div>
+            </div>
+        </div>        
+    </body>
 </html>

@@ -1,72 +1,75 @@
-'use strict';
-  
 function app() {
-    const URL_PREFIX = 'https://api.github.com/users';
-                
-    let utilities = {
-            log:  function(msg) {
-                console.log(msg);
-            },
-            setElemText: function(elem, text) {
-                if (elem.firstChild === null) {
-                    elem.appendChild(document.createTextNode(""));
+    "use strict";
+    const URL_PREFIX = "https://api.github.com/users";
+
+    let AppUtilities = function() { return undefined; };
+
+    AppUtilities.prototype.setElemText = function (elem, text) {
+        if (elem.firstChild === null) {
+            elem.appendChild(document.createTextNode(""));
+        }
+        elem.firstChild.nodeValue = text;
+        return elem;
+    };
+
+    AppUtilities.prototype.setSelectorElemText = function (selector, text) {
+        let elem = document.querySelector(selector);
+        return AppUtilities.prototype.setElemText(elem, text);
+    };
+
+    AppUtilities.prototype.retrieveData = function(url, callbackFunction, errorFunction) {
+        let request = new XMLHttpRequest();
+        request.onreadystatechange = function () {
+            if (request.readyState === 4) {
+                switch (request.status) {
+                case 200:
+                    callbackFunction(JSON.parse(request.responseText));
+                    break;
+                case 404:
+                    errorFunction("Does not exist");
+                    break;
+                default:
+                    errorFunction("Something went wrong: " + request.status + 
+                        " " + request.statusText);
                 }
-                elem.firstChild.nodeValue = text;
-                return elem;
-            },
-            setSelectorElemText: function (selector, text) {
-                let elem = document.querySelector(selector);
-                return utilities.setElemText(elem, text);
-            },
-            retrieveData: function (url, callbackFunction) {
-                var request = new XMLHttpRequest();
-                request.onreadystatechange = function() {
-                    if (request.readyState === 4) {
-                        switch(request.status) {
-                            case 200:
-                                callbackFunction(JSON.parse(this.responseText));
-                                break;
-                            case 404:
-                                showError("Does not exist");
-                                break;
-                            default:
-                                showError("Something went wrong: " + request.status + " " + 
-                                            request.statusText);
-                        }
-                    }
-                }
-                request.open('GET', url, true)
-                request.send();
             }
+        };
+        request.open("GET", url, true);
+        request.send();
+    };
+
+    AppUtilities.prototype.joinArray = function (array, separator) {
+        return array.join(separator);
+    };
+
+    let utilities = new AppUtilities();
+
+
+    function hideSearchResult() {
+        document.querySelector("#search-result").style.display = "none";
     }
 
     function showError(msg) {
         hideSearchResult();
         let elem = utilities.setSelectorElemText(".error", msg);
-        elem.style.display = 'block';
+        elem.style.display = "block";
     }
 
     function hideError() {
-        document.querySelector(".error").style.display = 'none';
+        document.querySelector(".error").style.display = "none";
     }
 
     function showSearchResult() {
         hideError();        
-        document.querySelector("#search-result").style.display = 'block';
+        document.querySelector("#search-result").style.display = "block";
     }
 
-    function hideSearchResult() {
-        document.querySelector("#search-result").style.display = 'none';
-    }
-
-    function renderUserData(responseObj) {
+    function renderUserInfo(responseObj) {
         document.querySelector("#search-result #avatar").src = 
                                                         responseObj.avatar_url;
         utilities.setSelectorElemText("#search-result #username", "@" + responseObj.login);
         utilities.setSelectorElemText("#search-result #full-name", responseObj.name);
         utilities.setSelectorElemText("#search-result #bio", responseObj.bio);
-        
-        retrieveUserRepos(responseObj.login);
     }
 
     function renderUserRepos(responseObj) {        
@@ -75,41 +78,46 @@ function app() {
             ul.removeChild(ul.firstChild);        
         }
 
-        responseObj.forEach(function(element, index, array) {
-            let li = document.createElement('li');
-            let span = document.createElement('span');
+        responseObj.forEach(function(element) {
+            let li = document.createElement("li");
+            let span = document.createElement("span");
             span.setAttribute("class", "repo-name");
             li.appendChild(span);
             span.appendChild(document.createTextNode(element.name));
 
-            span = document.createElement('span');
+            span = document.createElement("span");
             span.setAttribute("class", "repo-forks");
             li.appendChild(span);
             span.appendChild(document.createTextNode(element.forks_count));
 
-            span = document.createElement('span');
+            span = document.createElement("span");
             span.setAttribute("class", "repo-stars");
             li.appendChild(span);
             span.appendChild(document.createTextNode(element.stargazers_count));
 
             ul.appendChild(li);
-        });
-
-        showSearchResult();
+        });        
     }
 
-    function retrieveUserInfo(login) {
-        utilities.retrieveData([URL_PREFIX, login].join("/"), renderUserData);
+    function retrieveUserInfo(login, callbackFunction) {
+        let url = utilities.joinArray([URL_PREFIX, login], "/");
+        utilities.retrieveData(url, callbackFunction, showError);
     }
 
-    function retrieveUserRepos(login) {
-        utilities.retrieveData([URL_PREFIX, login, "repos"].join("/"), 
-                    renderUserRepos);
+    function retrieveUserRepos(login, callbackFunction) {
+        let url = utilities.joinArray([URL_PREFIX, login, "repos"], "/");
+        utilities.retrieveData(url, callbackFunction, showError);
     }
 
     function executeSearch(login) {     
         hideError();
-        retrieveUserInfo(login);
+        retrieveUserInfo(login, function(userData) {
+            renderUserInfo(userData);
+            retrieveUserRepos(userData.login, function(userReposData) {
+                renderUserRepos(userReposData);
+                showSearchResult();
+            });
+        });
     }
 
     function addSearchFormSubmitListener() {
@@ -126,14 +134,14 @@ function app() {
     */
     function addSearchFormUsernameListeners() {
         let username = document.querySelector("#search-username");
-        ["keyup", "blur"].forEach(function(element, index, array) {
-            username.addEventListener(element, function(e) {
-                if (this.value === "" || this.placeholder === this.value) {
-                    this.style.color = "#AAAAAA";
-                    this.style.fontWeight = "bold";
+        ["keyup", "blur"].forEach(function(element) {
+            username.addEventListener(element, function() {                
+                if (username.value === "" || username.placeholder === username.value) {
+                    username.style.color = "#AAAAAA";
+                    username.style.fontWeight = "bold";
                 } else {
-                    this.style.color = "black";
-                    this.style.fontWeight = "normal";
+                    username.style.color = "black";
+                    username.style.fontWeight = "normal";
                 }
             });
         });
@@ -141,13 +149,13 @@ function app() {
 
     function init() {
         addSearchFormSubmitListener();
-
         addSearchFormUsernameListeners();
     }
 
     init();
 }
 
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", function () {
+    "use strict";
     app();
 });
